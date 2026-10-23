@@ -51,7 +51,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                    <mainClass>com.lavajato.lavajatodavid.LavaJatoApplication</mainClass>
             </plugin>
         </plugins>
     </build>
