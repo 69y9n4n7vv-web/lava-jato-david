@@ -16,7 +16,7 @@
     <description>Projeto Web Lava Jato do David</description>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
@@ -51,6 +51,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.lavajato.lavajatodavid.LavaJatoApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
