@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lava Jato do David</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#D4AF37',
+                        darkBg: '#0F0F0F',
+                        cardBg: '#1A1A1A'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col justify-between">
+
+<!-- Header / Navbar -->
+<header class="border-b border-gold/20 bg-black/60 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-2xl font-black tracking-widest text-gold uppercase">Lava Jato do David</h1>
+        <nav class="space-x-6 text-sm font-semibold flex items-center">
+            <a href="/" class="hover:text-gold transition">Início</a>
+            <a href="/galeria" class="hover:text-gold transition">Galeria</a>
+            <a href="/agendar" class="bg-gold text-black px-4 py-2 rounded-full font-bold hover:bg-yellow-500 transition">Agendar Agora</a>
+            <a href="/admin" class="text-xs text-gray-500 hover:text-gold border border-gray-700 px-2 py-1 rounded transition">Área ADM</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<main class="max-w-6xl mx-auto px-4 py-16 text-center flex-grow flex flex-col items-center justify-center">
+    <div class="inline-block bg-gold/10 text-gold px-4 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-4 border border-gold/30">
+        Atendimento Exclusivo: Sábado e Domingo
+    </div>
+    <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
+        Estética Automotiva de Precisão.<br>
+        <span class="text-gold">O Brilho que Seu Veículo Merece.</span>
+    </h2>
+    <p class="text-gray-400 max-w-2xl mb-10 text-lg">
+        Lavagem detalhada com produtos de altíssima qualidade, acabamento impecável com pretinho de alta durabilidade e atenção especial a cada detalhe do seu carro ou moto.
+    </p>
+
+    <!-- Tabela e Preços em Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mb-12">
+        <!-- Moto Card -->
+        <div class="bg-cardBg p-8 rounded-2xl border border-gold/20 hover:border-gold/60 transition text-left relative overflow-hidden">
+            <div class="text-3xl mb-2">🏍️</div>
+            <h3 class="text-2xl font-bold text-white mb-4">Motos</h3>
+            <ul class="space-y-3 text-gray-300">
+                <li class="flex justify-between border-b border-gray-800 pb-2">
+                    <span>Lavagem Simples</span>
+                    <span class="font-bold text-gold">R$ 20,00</span>
+                </li>
+                <li class="flex justify-between border-b border-gray-800 pb-2">
+                    <span>Lavagem Detalhada</span>
+                    <span class="font-bold text-gold">R$ 30,00</span>
+                </li>
+            </ul>
+            <p class="text-xs text-gray-400 mt-4">*Produtos especiais de desengraxe e acabamento fino para motor e carenagem.</p>
+        </div>
+
+        <!-- Carro Card -->
+        <div class="bg-cardBg p-8 rounded-2xl border border-gold/20 hover:border-gold/60 transition text-left relative overflow-hidden">
+            <div class="text-3xl mb-2">🚗</div>
+            <h3 class="text-2xl font-bold text-white mb-4">Carros</h3>
+            <ul class="space-y-3 text-gray-300">
+                <li class="flex justify-between border-b border-gray-800 pb-2">
+                    <span>Lavagem Detalhada Completa</span>
+                    <span class="font-bold text-gold">R$ 60,00</span>
+                </li>
+            </ul>
+            <p class="text-xs text-gray-400 mt-4">*Inclui pretinho de longa duração, produtos de alta qualidade, caixa de roda e higienização das superfícies internas.</p>
+        </div>
+    </div>
+
+    <a href="/agendar" class="bg-gold hover:bg-yellow-500 text-black font-extrabold text-lg px-8 py-4 rounded-xl shadow-lg transition transform hover:-translate-y-1">
+        Garantir Meu Horário no Fim de Semana
+    </a>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-gold/20 bg-black/80 py-8 text-center text-gray-400 text-sm">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center gap-2">
+        <p class="font-bold text-gold">LAVA JATO DO DAVID</p>
+        <p>🕒 Sábados e Domingos: 08h às 12h | 13h às 17h (Pausa do Almoço: 12h - 13h)</p>
+        <a href="/admin" class="text-xs text-gray-600 hover:text-gold mt-2">Painel do Proprietário</a>
+    </div>
+</footer>
+
+</body>
+</html>

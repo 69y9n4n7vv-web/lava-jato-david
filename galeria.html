@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria - Lava Jato do David</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { gold: '#D4AF37', darkBg: '#0F0F0F', cardBg: '#1A1A1A' } }
+            }
+        }
+    </script>
+</head>
+<body class="bg-darkBg text-gray-100 font-sans min-h-screen">
+
+<header class="border-b border-gold/20 bg-black/60 p-4 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <a href="/" class="text-xl font-bold text-gold uppercase tracking-wider">Lava Jato do David</a>
+        <div class="space-x-4">
+            <a href="/" class="text-sm hover:text-gold">Início</a>
+            <a href="/agendar" class="bg-gold text-black px-4 py-2 rounded-full font-bold text-sm">Agendar</a>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-10">
+    <h2 class="text-3xl font-extrabold text-gold text-center mb-2">Nossa Galeria de Trabalhos</h2>
+    <p class="text-center text-gray-400 mb-10 text-sm">Confira o nível de acabamento e brilho entregue em cada veículo.</p>
+
+    <!-- Grade de Fotos Pública -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div th:each="foto : ${fotos}" class="bg-cardBg border border-gold/20 rounded-xl overflow-hidden hover:border-gold transition">
+            <img th:src="${foto.urlImagem}" alt="Foto Lava Jato" class="w-full h-60 object-cover">
+            <div class="p-4">
+                <span class="text-xs bg-gold/20 text-gold px-2 py-1 rounded font-bold" th:text="${foto.categoria}">CATEGORIA</span>
+                <h4 class="text-lg font-bold text-white mt-2" th:text="${foto.titulo}">Título do Veículo</h4>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

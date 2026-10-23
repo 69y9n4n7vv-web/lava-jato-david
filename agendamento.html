@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento - Lava Jato do David</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { gold: '#D4AF37', darkBg: '#0F0F0F', cardBg: '#1A1A1A' } }
+            }
+        }
+    </script>
+    <style>
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-gray-100 font-sans min-h-screen py-10 px-4">
+
+<div class="max-w-xl mx-auto bg-cardBg border border-gold/30 p-8 rounded-2xl shadow-2xl">
+    <div class="flex justify-between items-center mb-6">
+        <a href="/" class="text-gold text-sm font-semibold hover:underline">← Voltar ao Início</a>
+        <span class="text-xs bg-gold/20 text-gold px-3 py-1 rounded-full font-bold">Apenas Sábados e Domingos</span>
+    </div>
+
+    <h2 class="text-3xl font-extrabold text-center text-gold mb-2">Agende Seu Horário</h2>
+    <p class="text-center text-gray-400 mb-6 text-sm">Funcionamento exclusivo aos fins de semana.</p>
+
+    <div th:if="${erro}" class="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-lg mb-6 text-sm text-center font-bold">
+        <p th:text="${erro}"></p>
+    </div>
+
+    <form th:action="@{/agendar/salvar}" th:object="${agendamento}" method="post" class="space-y-4">
+        <div>
+            <label class="block text-sm font-semibold mb-1">Seu Nome</label>
+            <input type="text" th:field="*{nomeCliente}" required placeholder="Ex: Carlos Silva" class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-gold outline-none">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold mb-1">Telefone / WhatsApp</label>
+            <input type="text" th:field="*{telefoneCliente}" required placeholder="Ex: (79) 99999-9999" class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-gold outline-none">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold mb-1">Tipo de Veículo</label>
+            <select id="tipoVeiculo" th:field="*{tipoVeiculo}" onchange="atualizarServicos()" required class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-gold outline-none">
+                <option value="">Selecione...</option>
+                <option value="Moto">Moto</option>
+                <option value="Carro">Carro</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold mb-1">Modelo do Veículo</label>
+            <input type="text" th:field="*{modeloVeiculo}" required placeholder="Ex: Fan 160 / Civic" class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-gold outline-none">
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold mb-1">Serviço Desejado</label>
+            <select id="tipoServico" th:field="*{tipoServico}" onchange="atualizarValor()" required class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-gold outline-none">
+                <option value="">Selecione o veículo primeiro...</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold mb-1">Valor do Serviço (R$)</label>
+            <input type="number" step="0.01" id="valorTotal" th:field="*{valorTotal}" readonly class="w-full bg-black/80 border border-gold/40 text-gold font-bold rounded-lg p-3 outline-none cursor-not-allowed">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-semibold mb-1">Data da Lavagem</label>
+                <input type="date" id="dataAgendamento" th:field="*{dataAgendamento}" required onchange="aoMudarData(this)" class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-gold outline-none cursor-pointer">
+                <p id="msgErroData" class="text-xs text-red-400 mt-2 font-semibold hidden">⚠️ Atendemos apenas Sábado e Domingo!</p>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold mb-1">Horário</label>
+                <select id="selectHorario" th:field="*{horarioAgendamento}" required class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-gold outline-none">
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00 (Último da Manhã)</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00 (Último da Tarde)</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" id="btnSubmit" class="w-full bg-gold hover:bg-yellow-500 text-black font-extrabold p-4 rounded-xl mt-6 transition">
+            Confirmar Agendamento
+        </button>
+    </form>
+</div>
+
+<!-- Botão Flutuante do WhatsApp -->
+<a href="https://wa.me/5579999248255?text=Olá%20David!%20Gostaria%20de%20tirar%20algumas%20dúvidas%20sobre%20os%20horários%20e%20serviços%20do%20Lava%20Jato."
+   target="_blank"
+   class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl flex items-center justify-center transition transform hover:scale-110 z-50">
+    <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+    </svg>
+</a>
+
+<script>
+    function aoMudarData(input) {
+        if (!input.value) return;
+
+        const partes = input.value.split('-');
+        const dataEscolhida = new Date(partes[0], partes[1] - 1, partes[2]);
+        const diaSemana = dataEscolhida.getDay();
+
+        const msgErro = document.getElementById("msgErroData");
+        const btnSubmit = document.getElementById("btnSubmit");
+
+        if (diaSemana !== 0 && diaSemana !== 6) {
+            msgErro.classList.remove("hidden");
+            input.value = "";
+            btnSubmit.disabled = true;
+            btnSubmit.classList.add("opacity-50", "cursor-not-allowed");
+            return;
+        } else {
+            msgErro.classList.add("hidden");
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove("opacity-50", "cursor-not-allowed");
+        }
+
+        fetch('/agendar/horarios-ocupados?data=' + input.value)
+            .then(response => response.json())
+            .then(horariosOcupados => {
+                const selectHorario = document.getElementById("selectHorario");
+                const options = selectHorario.options;
+
+                for (let i = 0; i < options.length; i++) {
+                    const opt = options[i];
+                    const valorHora = opt.value;
+
+                    if (horariosOcupados.includes(valorHora)) {
+                        opt.disabled = true;
+                        if (!opt.text.includes("(Indisponível)")) {
+                            opt.text = valorHora + " (Indisponível)";
+                        }
+                    } else {
+                        opt.disabled = false;
+                        opt.text = valorHora + (valorHora === "11:00" ? " (Último da Manhã)" : valorHora === "17:00" ? " (Último da Tarde)" : "");
+                    }
+                }
+            })
+            .catch(err => console.error("Erro ao buscar horários ocupados:", err));
+    }
+
+    function atualizarServicos() {
+        const tipo = document.getElementById("tipoVeiculo").value;
+        const servicoSelect = document.getElementById("tipoServico");
+        servicoSelect.innerHTML = "";
+
+        if (tipo === "Moto") {
+            servicoSelect.innerHTML += `<option value="Lavagem Simples" data-valor="20.00">Lavagem Simples - R$ 20,00</option>`;
+            servicoSelect.innerHTML += `<option value="Lavagem Detalhada" data-valor="30.00">Lavagem Detalhada - R$ 30,00</option>`;
+        } else if (tipo === "Carro") {
+            servicoSelect.innerHTML += `<option value="Lavagem Detalhada Completa" data-valor="60.00">Lavagem Detalhada Completa - R$ 60,00</option>`;
+        }
+        atualizarValor();
+    }
+
+    function atualizarValor() {
+        const servicoSelect = document.getElementById("tipoServico");
+        const selectedOption = servicoSelect.options[servicoSelect.selectedIndex];
+        if (selectedOption && selectedOption.dataset.valor) {
+            document.getElementById("valorTotal").value = selectedOption.dataset.valor;
+        } else {
+            document.getElementById("valorTotal").value = "";
+        }
+    }
+</script>
+</body>
+</html>
